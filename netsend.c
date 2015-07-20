@@ -13,6 +13,7 @@
 int main(int argc, char *argv[])
  {
 	static char buffer[256];
+	char telegram[1000];
 	int sock_fd, err, length, port;
 	struct sockaddr_in server_addr;
 	fd_set input_fdset;
@@ -57,25 +58,20 @@ int main(int argc, char *argv[])
 	}
 
 	argnumber = 3;
+	telegram[0]=0;
 	do
 	{
 		if (sscanf(argv[argnumber], "%s", buffer) == 1)
 		{
+			strcat(telegram, buffer);
 			argnumber++;
 			if (argnumber == argc)
 			{
-				strcat(buffer, "\n");
+				//strcat(buffer, "\n");
 			}
 			else
 			{
-				strcat(buffer, " ");
-			}
-			length = strlen(buffer);
-			if (send(sock_fd, buffer, length, 0) == -1)
-			{
-				perror("send: send() failed");
-				close(sock_fd);
-				return(1);
+				strcat(telegram, " ");
 			}
 		}
 		else
@@ -84,6 +80,16 @@ int main(int argc, char *argv[])
 		}
 	}
 	while(argnumber < argc);
+
+	length = strlen(telegram);
+	printf("==> %s\n",telegram);
+	telegram[length] = 0;
+	if (send(sock_fd, telegram, length+1, 0) == -1)
+	{
+		perror("send: send() failed");
+		close(sock_fd);
+		return(1);
+	}
 
 	close(sock_fd);
 	return(0);
