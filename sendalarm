@@ -1,6 +1,6 @@
 #!/bin/bash
 
-inet=`ifconfig eth0 | grep inet | awk -F: '{print $2}' | awk '{print $1}'`
+inet=`ifconfig wlan0 | grep inet | awk -F: '{print $2}' | awk '{print $1}'`
 host=`hostname`
 
 datum=`date +%y%m%d`
@@ -11,7 +11,4 @@ echo $host
 echo $datum
 echo $time
 
-for i in `seq 1 2`;
-do
-	/home/pi/netsend/netsend $1 $2 $datum $time $3 $host $inet 
-done
+/home/pi/netsend/netsendUDP $1 $2 $datum $time $3 $host $inet 
